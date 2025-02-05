@@ -153,8 +153,6 @@ Telefone(cpf_p*, numero);
 	cpf_p referencia Pessoa(cpf)
 */
 
-
-
 -- Inserindo Pessoas
 INSERT INTO Pessoa (cpf, nome, numero, rua, bairro) VALUES ('12345678901', 'João Silva', '101', 'Rua A', 'Centro');
 INSERT INTO Pessoa (cpf, nome, numero, rua, bairro) VALUES ('23456789012', 'Maria Oliveira', '202', 'Rua B', 'Jardins');
