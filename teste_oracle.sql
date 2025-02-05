@@ -7,17 +7,44 @@ Cargo(cargo_funcionário*, salário)
 		cargo_funcionário referencia Funcionário(cargo)
 */
 
-CREATE TABLE Fazer_Manutencao (
-    cpf_funcionario VARCHAR2(11),
-    numero_quarto VARCHAR2(10),
-    CONSTRAINT fk_manutencao_funcionario FOREIGN KEY (cpf_funcionario) REFERENCES Funcionario(cpf_p),
-    CONSTRAINT fk_manutencao_quarto FOREIGN KEY (numero_quarto) REFERENCES Quarto(numero_quarto),
-    CONSTRAINT pk_manutencao PRIMARY KEY (cpf_funcionario, numero_quarto)
+CREATE TABLE Pessoa (
+    cpf VARCHAR2(11) PRIMARY KEY,
+    nome VARCHAR2(100) NOT NULL,
+    numero VARCHAR2(10),
+    rua VARCHAR2(100),
+    bairro VARCHAR2(100)
 );
 /*
-Fazer Manutencao(cpf_funcionario*, numero_quarto*)
-	cpf_funcionario referencia Funcionario(cpf_p)
-	numero_quarto referencia Quarto(numero_quarto)
+Pessoa(cpf, nome, número, rua, bairro)
+*/
+
+CREATE TABLE Tipo_quarto (
+    tipo VARCHAR2(50) PRIMARY KEY,
+    valor NUMBER(10, 2)
+);
+/*
+Tipo_quarto(tipo*, valor)
+tipo referencia Quarto(tipo_quarto)
+*/  
+
+CREATE TABLE Quarto (
+    numero_quarto VARCHAR2(10) PRIMARY KEY,
+    tipo_quarto VARCHAR2(50),
+    CONSTRAINT fk_quarto_tipo FOREIGN KEY (tipo_quarto) REFERENCES Tipo_quarto(tipo)
+);
+/*
+Quarto(numero quarto, tipo_quarto)
+*/
+
+CREATE TABLE Reserva (
+    num_quarto VARCHAR2(10),
+    periodo VARCHAR2(50),
+    CONSTRAINT fk_reserva_quarto FOREIGN KEY (num_quarto) REFERENCES Quarto(numero_quarto),
+    CONSTRAINT pk_reserva PRIMARY KEY (num_quarto, periodo)
+);
+/*
+Reserva(num quarto*, periodo)
+	num_quarto referencia Quarto(numero_quarto)
 */
 
 CREATE TABLE Funcionario (
@@ -32,6 +59,34 @@ CREATE TABLE Funcionario (
 Funcionário(cpf_p*, cargo, data_contratação, cpf_orientador*)
     cpf_p referencia Pessoa(cpf)
     cpf_orientador referencia Funcionário(cpf_p)
+*/
+
+CREATE TABLE Pagamento (
+    id_pagamento NUMBER PRIMARY KEY,
+    num_quarto VARCHAR2(10),
+    periodo VARCHAR2(50),
+    tipo_pagamento VARCHAR2(50),
+    valor NUMBER(10, 2),
+    data DATE,
+    CONSTRAINT fk_pagamento_reserva FOREIGN KEY (num_quarto, periodo) REFERENCES Reserva(num_quarto, periodo)
+);
+/*
+Pagamento(id pagamento, num_quarto*, período*,  tipo pagamento, valor, data)
+	num_quarto, periodo referenciam Reserva(num_quarto, periodo)
+*/
+
+
+CREATE TABLE Fazer_Manutencao (
+    cpf_funcionario VARCHAR2(11),
+    numero_quarto VARCHAR2(10),
+    CONSTRAINT fk_manutencao_funcionario FOREIGN KEY (cpf_funcionario) REFERENCES Funcionario(cpf_p),
+    CONSTRAINT fk_manutencao_quarto FOREIGN KEY (numero_quarto) REFERENCES Quarto(numero_quarto),
+    CONSTRAINT pk_manutencao PRIMARY KEY (cpf_funcionario, numero_quarto)
+);
+/*
+Fazer Manutencao(cpf_funcionario*, numero_quarto*)
+	cpf_funcionario referencia Funcionario(cpf_p)
+	numero_quarto referencia Quarto(numero_quarto)
 */
 
 CREATE TABLE Hospede (
@@ -59,41 +114,6 @@ Multa(id multa, id_pagamento*, num_quarto*, periodo*,  tipo, valor)
 	num_quarto, periodo referenciam Reserva(num_quarto, periodo)
 */
 
-CREATE TABLE Pagamento (
-    id_pagamento NUMBER PRIMARY KEY,
-    num_quarto VARCHAR2(10),
-    periodo VARCHAR2(50),
-    tipo_pagamento VARCHAR2(50),
-    valor NUMBER(10, 2),
-    data DATE,
-    CONSTRAINT fk_pagamento_reserva FOREIGN KEY (num_quarto, periodo) REFERENCES Reserva(num_quarto, periodo)
-);
-/*
-Pagamento(id pagamento, num_quarto*, período*,  tipo pagamento, valor, data)
-	num_quarto, periodo referenciam Reserva(num_quarto, periodo)
-*/
-
-
-CREATE TABLE Pessoa (
-    cpf VARCHAR2(11) PRIMARY KEY,
-    nome VARCHAR2(100) NOT NULL,
-    numero VARCHAR2(10),
-    rua VARCHAR2(100),
-    bairro VARCHAR2(100)
-);
-/*
-Pessoa(cpf, nome, número, rua, bairro)
-*/
-
-CREATE TABLE Quarto (
-    numero_quarto VARCHAR2(10) PRIMARY KEY,
-    tipo_quarto VARCHAR2(50),
-    CONSTRAINT fk_quarto_tipo FOREIGN KEY (tipo_quarto) REFERENCES Tipo_quarto(tipo)
-);
-/*
-Quarto(numero quarto, tipo_quarto)
-*/
-
 CREATE TABLE Realiza (
     num_quarto_reserva VARCHAR2(10),
     periodo_reserva VARCHAR2(50),
@@ -113,17 +133,6 @@ Realiza(num quarto reserva*, periodo reserva*, hospede*, funcionario*, data_chec
     uncionario referencia Funcionario(cpf_p)
 */
 
-CREATE TABLE Reserva (
-    num_quarto VARCHAR2(10),
-    periodo VARCHAR2(50),
-    CONSTRAINT fk_reserva_quarto FOREIGN KEY (num_quarto) REFERENCES Quarto(numero_quarto),
-    CONSTRAINT pk_reserva PRIMARY KEY (num_quarto, periodo)
-);
-/*
-Reserva(num quarto*, periodo)
-	num_quarto referencia Quarto(numero_quarto)
-*/
-
 CREATE TABLE Telefone (
     cpf_p VARCHAR2(11),
     numero VARCHAR2(15),
@@ -136,15 +145,6 @@ Telefone(cpf_p*, numero);
 */
 
 
-
-CREATE TABLE Tipo_quarto (
-    tipo VARCHAR2(50) PRIMARY KEY,
-    valor NUMBER(10, 2)
-);
-/*
-Tipo_quarto(tipo*, valor)
-tipo referencia Quarto(tipo_quarto)
-*/  
 
 -- Inserindo Pessoas
 INSERT INTO Pessoa (cpf, nome, numero, rua, bairro) VALUES

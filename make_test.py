@@ -1,7 +1,7 @@
 import os
 import glob
 
-
+toposort = ['cargo.sql','pessoa.sql','tipo_quarto.sql','quarto.sql','reserva.sql','funcionario.sql','pagamento.sql']
 
 # Lê todos os arquivos sql e os mescla em um único arquivo para teste.
 
@@ -11,8 +11,13 @@ output_file = 'teste_oracle.sql'
 files = glob.glob(os.path.join(folder, f'*.{file_extension}'))
     
 with open(output_file, 'w', encoding='utf-8') as outfile:
+    for file in toposort:
+        with open(file, 'r', encoding='utf-8') as infile:
+            outfile.write(infile.read())
+            outfile.write('\n\n')
+
     for file in files:
-        if os.path.basename(file)!='povoamento.sql':
+        if os.path.basename(file)!='povoamento.sql' and os.path.basename(file) not in toposort:
             with open(file, 'r', encoding='utf-8') as infile:
                 outfile.write(infile.read())
                 outfile.write('\n\n')
