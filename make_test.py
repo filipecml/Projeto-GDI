@@ -18,11 +18,14 @@ with open(output_file, 'w', encoding='utf-8') as outfile:
             outfile.write('\n\n')
 
     for file in files:
-        if os.path.basename(file)!='povoamento.sql' and os.path.basename(file) not in toposort:
+        if os.path.basename(file)!='povoamento.sql' and os.path.basename(file)!='consultas.sql' and os.path.basename(file) not in toposort:
             with open(file, 'r', encoding='utf-8') as infile:
                 outfile.write(infile.read())
                 outfile.write('\n\n')
     with open('db/povoamento.sql', 'r', encoding='utf-8') as infile:
+        outfile.write(infile.read())
+        outfile.write('\n\n')
+    with open('db/consultas.sql', 'r', encoding='utf-8') as infile:
         outfile.write(infile.read())
         outfile.write('\n\n')
 
