@@ -56,8 +56,8 @@ GROUP BY tipo_pagamento;
 
 SELECT H.cpf_p AS cpf, SUM(P.valor) AS total_gasto
 FROM Hospede H
-JOIN Realiza R ON R.hospede = H.cpf_p
-JOIN Pagamento P ON P.num_quarto = R.num_quarto_reserva
+INNER JOIN Realiza R ON R.hospede = H.cpf_p
+INNER JOIN Pagamento P ON P.num_quarto = R.num_quarto_reserva
 GROUP BY H.cpf_p
 HAVING SUM(P.valor) > 2000.00;
 
