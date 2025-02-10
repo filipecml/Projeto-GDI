@@ -28,6 +28,10 @@ WHERE M.tipo = 'Atraso Check-out';
 --COUNT
 --LEFT ou RIGHT ou FULL OUTER JOIN 
 
+SELECT P.nome, F.cargo
+FROM Pessoa P
+FULL OUTER JOIN Funcionario F ON P.cpf = F.cpf_p;
+
 --SUBCONSULTA COM OPERADOR RELACIONAL
 SELECT cpf_p
 FROM Funcionario
@@ -89,11 +93,98 @@ select * from Gerentes;
 --%TYPE
 --%ROWTYPE
 --IF ELSIF
+
+DECLARE
+    v_nome Funcionario.nome%TYPE;
+    v_salario Funcionario.salario%TYPE;
+    v_categoria VARCHAR2(20);
+BEGIN
+   
+    SELECT nome, salario INTO v_nome, v_salario 
+    FROM Funcionario 
+    WHERE id = 1;  
+
+    IF v_salario < 2000 THEN
+        v_categoria := 'Baixo';
+    ELSIF v_salario BETWEEN 2000 AND 5000 THEN
+        v_categoria := 'Médio';
+    ELSE
+        v_categoria := 'Alto';
+    END IF;
+
+    DBMS_OUTPUT.PUT_LINE('Funcionário: ' || v_nome || ' - Categoria: ' || v_categoria);
+END;
+
 --CASE WHEN
+
+SELECT P.nome, 
+       F.cargo,
+       CASE 
+           WHEN P.cpf IS NULL THEN 'Apenas funcionário'
+           WHEN F.cpf_p IS NULL THEN 'Apenas pessoa'
+           ELSE 'Pessoa e funcionário'
+       END AS status
+FROM Pessoa P
+FULL OUTER JOIN Funcionario F 
+ON P.cpf = F.cpf_p;
+
 --LOOP EXIT WHEN
+
+DECLARE
+    CURSOR pessoa_cursor IS
+        SELECT P.nome
+        FROM Pessoa P
+        JOIN Funcionario F ON P.cpf = F.cpf_p;
+    pessoa_record pessoa_cursor%ROWTYPE;
+BEGIN
+    OPEN pessoa_cursor;
+    LOOP
+        FETCH pessoa_cursor INTO pessoa_record;
+        EXIT WHEN pessoa_cursor%NOTFOUND;
+        
+        -- Ação quando uma pessoa for um funcionário
+        DBMS_OUTPUT.PUT_LINE('Funcionario: ' || pessoa_record.nome);
+    END LOOP;
+    CLOSE pessoa_cursor;
+END;
+
 --WHILE LOOP
+
+DECLARE
+    v_contador NUMBER := 1;
+    v_multa NUMBER;
+BEGIN
+    WHILE v_contador <= 10 LOOP  
+
+        SELECT multa_value INTO v_multa
+        FROM Multas
+        WHERE contador = v_contador;
+
+        DBMS_OUTPUT.PUT_LINE('Multa encontrada para o contador ' || v_contador || ': ' || v_multa);
+        
+        v_contador := v_contador + 1;
+    END LOOP;
+END;
+
 --FOR IN LOOP
 
+DECLARE
+    v_contador NUMBER := 1;
+    v_multa NUMBER;
+BEGIN
+    FOR i IN 1..10 LOOP  -- Loop de 1 a 10
+        -- A cada iteração, tenta acessar uma multa associada ao contador
+        SELECT multa_value INTO v_multa
+        FROM Multas
+        WHERE contador = v_contador;
+
+        DBMS_OUTPUT.PUT_LINE('Multa encontrada para o contador ' || v_contador || ': ' || v_multa);
+        
+        -- Incrementa o contador
+        v_contador := v_contador + 1;
+    END LOOP;
+END;
+/
 --SELECT … INTO
 DECLARE
     v_numero varchar(11);
