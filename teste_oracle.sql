@@ -218,9 +218,22 @@ SELECT * FROM Telefone;
 --ALTER TABLE
 --CREATE INDEX
 --INSERT INTO
+
 --UPDATE
+update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
+
 --DELETE
+SELECT * FROM multa;
+DELETE FROM multa WHERE id_multa = 3;
+
 --SELECT-FROM-WHERE
+
+-- Seleciona as tuplas (id_multa, num_quarto) das reservas em que houve multa do tipo 'Atraso Check-out'.
+
+SELECT M.id_multa AS id_multa, M.num_quarto AS num_quarto
+FROM Multa M
+WHERE M.tipo = 'Atraso Check-out';
+
 --BETWEEN
 --IN
 --LIKE
@@ -239,8 +252,31 @@ SELECT * FROM tipo_quarto where valor < 200;
 --SUBCONSULTA COM ANY
 --SUBCONSULTA COM ALL
 --ORDER BY
+
+-- Seleciona as tuplas (cargo, salario) em ordem decrescente de valor de salário
+
+SELECT C.cargo_funcionario AS cargo, C.salario AS salario
+FROM Cargo C
+ORDER BY salario DESC;
+
 --GROUP BY
+
+-- Seleciona cada tipo de pagamento e associa à quantidade de pagamentos daquele tipo feitos até o momento
+
+SELECT tipo_pagamento, COUNT(*) AS total_pagamentos
+FROM Pagamento
+GROUP BY tipo_pagamento;
+
 --HAVING
+
+-- Seleciona os CPF's dos hóspedes que já visitaram o hotel e realizaram um gasto histórico maior que 2000.00
+
+SELECT H.cpf_p AS cpf, SUM(P.valor) AS total_gasto
+FROM Hospede H
+INNER JOIN Realiza R ON R.hospede = H.cpf_p
+INNER JOIN Pagamento P ON P.num_quarto = R.num_quarto_reserva
+GROUP BY H.cpf_p
+HAVING SUM(P.valor) > 2000.00;
 
 --UNION ou INTERSECT ou MINUS
 SELECT cpf FROM Pessoa
@@ -322,9 +358,42 @@ END;
 /
 
 --CREATE OR REPLACE PACKAGE
---CREATE OR REPLACE PACKAGE BODY
---CREATE OR REPLACE TRIGGER (COMANDO)
---CREATE OR REPLACE TRIGGER (LINHA)
+CREATE OR REPLACE PACKAGE util IS
+    PROCEDURE listar_pessoas;
+END util;
+/
 
+-- CREATE OR REPLACE PACKAGE BODY
+CREATE OR REPLACE PACKAGE BODY util IS
+    PROCEDURE listar_pessoas IS
+        CURSOR pessoa_cursor IS SELECT cpf, nome, numero, rua, bairro FROM Pessoa;
+        pessoa_record Pessoa%ROWTYPE;
+    BEGIN
+        OPEN pessoa_cursor;
+        LOOP
+            FETCH pessoa_cursor INTO pessoa_record;
+            EXIT WHEN pessoa_cursor%NOTFOUND;
+            DBMS_OUTPUT.PUT_LINE('CPF: ' || pessoa_record.cpf || ', Nome: ' || pessoa_record.nome);
+        END LOOP;
+        CLOSE pessoa_cursor;
+    END listar_pessoas;
+END util;
+
+BEGIN
+    util.listar_pessoas;
+END;
+
+--CREATE OR REPLACE TRIGGER (COMANDO)
+
+--CREATE OR REPLACE TRIGGER (LINHA)
+CREATE OR REPLACE TRIGGER trg_before_update_funcionario
+BEFORE UPDATE ON Funcionario
+FOR EACH ROW
+BEGIN
+    IF :NEW.cargo != :OLD.cargo THEN
+        DBMS_OUTPUT.PUT_LINE('Cargo alterado de ' || :OLD.cargo || ' para ' || :NEW.cargo);
+    END IF;
+END;
+/
 
 

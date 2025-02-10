@@ -167,6 +167,12 @@ BEGIN
 END;
 
 --CREATE OR REPLACE TRIGGER (COMANDO)
+CREATE OR REPLACE TRIGGER trg_auditoria_ddl
+AFTER DROP ON SCHEMA
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('ALERTA: Um objeto foi removido do banco de dados!');
+END;
+/
 
 --CREATE OR REPLACE TRIGGER (LINHA)
 CREATE OR REPLACE TRIGGER trg_before_update_funcionario
