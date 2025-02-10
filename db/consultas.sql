@@ -190,3 +190,34 @@ BEGIN
     END IF;
 END;
 /
+
+-- DELETE 
+SELECT * FROM multa;
+DELETE FROM multa WHERE id_multa = 3;
+SELECT * FROM pagamento;
+DELETE FROM pagamento WHERE id_pagamento = 1;
+-- BLOCO ANONIMO
+DECLARE 
+ 	v_nome VARCHAR2(100) := 'João Silva';
+	mensagem VARCHAR2(100);
+BEGIN
+	mensagem := 'Olá, ' || v_nome || '!';
+	DBMS_OUTPUT.PUT_LINE(mensagem);
+END;
+/
+
+SELECT * FROM funcionario;
+-- %TYPE
+DECLARE
+    cargo_funcionario funcionario.cargo%TYPE;
+  	cpf_funcionario funcionario.cpf_p%TYPE;
+BEGIN
+ 	cargo_funcionario := 'Gerente';
+	cpf_funcionario := '12345678901';
+
+	DBMS_OUTPUT.PUT_LINE('Cargo Funcionário: ' || cargo_funcionario);
+  	DBMS_OUTPUT.PUT_LINE('CPF Funcionário: ' || cpf_funcionario);
+END;
+/
+
+
