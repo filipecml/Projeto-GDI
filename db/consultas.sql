@@ -29,7 +29,13 @@ WHERE M.tipo = 'Atraso Check-out';
 --LEFT ou RIGHT ou FULL OUTER JOIN 
 
 --SUBCONSULTA COM OPERADOR RELACIONAL
-SELECT * FROM tipo_quarto where valor < 200;
+SELECT cpf_p
+FROM Funcionario
+WHERE data_contratacao > (
+    SELECT data_contratacao
+    FROM Funcionario
+    WHERE cpf_p = '12345678901'
+);
 
 --SUBCONSULTA COM IN
 --SUBCONSULTA COM ANY
