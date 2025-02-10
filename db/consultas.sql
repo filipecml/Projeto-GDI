@@ -141,7 +141,31 @@ END;
 /
 
 --CREATE OR REPLACE PACKAGE
---CREATE OR REPLACE PACKAGE BODY
+CREATE OR REPLACE PACKAGE util IS
+    PROCEDURE listar_pessoas;
+END util;
+/
+
+-- CREATE OR REPLACE PACKAGE BODY
+CREATE OR REPLACE PACKAGE BODY util IS
+    PROCEDURE listar_pessoas IS
+        CURSOR pessoa_cursor IS SELECT cpf, nome, numero, rua, bairro FROM Pessoa;
+        pessoa_record Pessoa%ROWTYPE;
+    BEGIN
+        OPEN pessoa_cursor;
+        LOOP
+            FETCH pessoa_cursor INTO pessoa_record;
+            EXIT WHEN pessoa_cursor%NOTFOUND;
+            DBMS_OUTPUT.PUT_LINE('CPF: ' || pessoa_record.cpf || ', Nome: ' || pessoa_record.nome);
+        END LOOP;
+        CLOSE pessoa_cursor;
+    END listar_pessoas;
+END util;
+
+BEGIN
+    util.listar_pessoas;
+END;
+
 --CREATE OR REPLACE TRIGGER (COMANDO)
 
 --CREATE OR REPLACE TRIGGER (LINHA)
