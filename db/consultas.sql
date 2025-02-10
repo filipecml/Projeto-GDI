@@ -1,7 +1,10 @@
 --ALTER TABLE
 --CREATE INDEX
 --INSERT INTO
+
 --UPDATE
+update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
+
 --DELETE
 --SELECT-FROM-WHERE
 --BETWEEN
@@ -107,5 +110,14 @@ END;
 --CREATE OR REPLACE PACKAGE
 --CREATE OR REPLACE PACKAGE BODY
 --CREATE OR REPLACE TRIGGER (COMANDO)
---CREATE OR REPLACE TRIGGER (LINHA)
 
+--CREATE OR REPLACE TRIGGER (LINHA)
+CREATE OR REPLACE TRIGGER trg_before_update_funcionario
+BEFORE UPDATE ON Funcionario
+FOR EACH ROW
+BEGIN
+    IF :NEW.cargo != :OLD.cargo THEN
+        DBMS_OUTPUT.PUT_LINE('Cargo alterado de ' || :OLD.cargo || ' para ' || :NEW.cargo);
+    END IF;
+END;
+/
