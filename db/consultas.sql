@@ -3,7 +3,15 @@
 --INSERT INTO
 --UPDATE
 --DELETE
+
 --SELECT-FROM-WHERE
+
+-- Seleciona as tuplas (id_multa, num_quarto) das reservas em que houve multa do tipo 'Atraso Check-out'.
+
+SELECT M.id_multa AS id_multa, M.num_quarto AS num_quarto
+FROM Multa M
+WHERE M.tipo = 'Atraso Check-out';
+
 --BETWEEN
 --IN
 --LIKE
@@ -22,8 +30,31 @@ SELECT * FROM tipo_quarto where valor < 200;
 --SUBCONSULTA COM ANY
 --SUBCONSULTA COM ALL
 --ORDER BY
+
+-- Seleciona as tuplas (cargo, salario) em ordem decrescente de valor de salário
+
+SELECT C.cargo_funcionario AS cargo, C.salario AS salario
+FROM Cargo C
+ORDER BY salario DESC;
+
 --GROUP BY
+
+-- Seleciona cada tipo de pagamento e associa à quantidade de pagamentos daquele tipo feitos até o momento
+
+SELECT tipo_pagamento, COUNT(*) AS total_pagamentos
+FROM Pagamento
+GROUP BY tipo_pagamento;
+
 --HAVING
+
+-- Seleciona os CPF's dos hóspedes que já visitaram o hotel e realizaram um gasto histórico maior que 2000.00
+
+SELECT H.cpf_p AS cpf, SUM(P.valor) AS total_gasto
+FROM Hospede H
+JOIN Realiza R ON R.hospede = H.cpf_p
+JOIN Pagamento P ON P.num_quarto = R.num_quarto_reserva
+GROUP BY H.cpf_p
+HAVING SUM(P.valor) > 2000.00;
 
 --UNION ou INTERSECT ou MINUS
 SELECT cpf FROM Pessoa
