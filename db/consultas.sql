@@ -6,6 +6,8 @@
 update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
 
 --DELETE
+SELECT * FROM multa;
+DELETE FROM multa WHERE id_multa = 3;
 
 --SELECT-FROM-WHERE
 
