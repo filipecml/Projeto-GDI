@@ -1,5 +1,9 @@
 --ALTER TABLE
+ALTER TABLE Pessoa
+MODIFY bairro VARCHAR2(75);
 --CREATE INDEX
+CREATE INDEX idx_nome_pessoa
+ON Pessoa(nome);
 --INSERT INTO
 
 --UPDATE
@@ -86,6 +90,21 @@ select * from Gerentes;
 
 --GRANT / REVOKE*
 --USO DE RECORD
+DECLARE
+    TYPE pessoa_record IS RECORD (
+        cpf  Pessoa.cpf%TYPE,
+        nome Pessoa.nome%TYPE,
+    );
+    v_pessoa pessoa_record;
+BEGIN
+    -- Atribuir valores ao RECORD
+    v_pessoa.cpf := '12345678901';
+    v_pessoa.nome := 'Tulio Araujo';
+
+    -- Exibir os valores
+    DBMS_OUTPUT.PUT_LINE('CPF: ' || v_pessoa.cpf);
+    DBMS_OUTPUT.PUT_LINE('Nome: ' || v_pessoa.nome);
+END;
 --USO DE ESTRUTURA DE DADOS DO TIPO TABLE
 --BLOCO ANÔNIMO
 --CREATE PROCEDURE
