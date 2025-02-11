@@ -142,6 +142,10 @@ select * from Gerentes;
 
 --GRANT / REVOKE*
 
+/*
+GRANT INSERT, UPDATE ON Reserva TO funcionarios;
+REVOKE INSERT, UPDATE ON Reserva FROM usuario_hotel;
+*/
 
 --USO DE RECORD
 DECLARE
@@ -178,6 +182,33 @@ SELECT * FROM funcionario;
 
 --CREATE FUNCTION
 
+CREATE OR REPLACE FUNCTION verificar_disponibilidade_quarto(
+    p_num_quarto IN VARCHAR2,
+    p_data_inicio IN DATE,
+    p_data_fim IN DATE
+) RETURN VARCHAR2
+IS
+    v_quarto_ocupado NUMBER;
+BEGIN
+    -- Verifica se há reservas com sobreposição de períodos
+    SELECT COUNT(*)
+    INTO v_quarto_ocupado
+    FROM Reserva
+    WHERE num_quarto = p_num_quarto
+      AND (
+          (TO_DATE(SUBSTR(periodo, 1, 10), 'YYYY-MM-DD') <= p_data_fim) AND
+          (TO_DATE(SUBSTR(periodo, 14, 10), 'YYYY-MM-DD') >= p_data_inicio)
+      );
+
+    -- Retorna uma mensagem indicando se o quarto está disponível ou não
+    IF v_quarto_ocupado = 0 THEN
+        RETURN 'Quarto ' || p_num_quarto || ' está disponível para o período: ' || TO_CHAR(p_data_inicio, 'YYYY-MM-DD') || ' a ' || TO_CHAR(p_data_fim, 'YYYY-MM-DD');
+    ELSE
+        RETURN 'Quarto ' || p_num_quarto || ' NÃO está disponível para o período: ' || TO_CHAR(p_data_inicio, 'YYYY-MM-DD') || ' a ' || TO_CHAR(p_data_fim, 'YYYY-MM-DD');
+    END IF;
+END;
+/
+	
 -- %TYPE
 DECLARE
     cargo_funcionario funcionario.cargo%TYPE;
