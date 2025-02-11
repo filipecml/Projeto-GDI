@@ -1,10 +1,13 @@
 --ALTER TABLE
 ALTER TABLE Pessoa
 MODIFY bairro VARCHAR2(75);
+
 --CREATE INDEX
 CREATE INDEX idx_nome_pessoa
 ON Pessoa(nome);
+
 --INSERT INTO
+--No povoamento
 
 --UPDATE
 update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
@@ -12,11 +15,11 @@ update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
 --DELETE
 SELECT * FROM multa;
 DELETE FROM multa WHERE id_multa = 3;
+SELECT * FROM pagamento;
+DELETE FROM pagamento WHERE id_pagamento = 1;
 
 --SELECT-FROM-WHERE
-
 -- Seleciona as tuplas (id_multa, num_quarto) das reservas em que houve multa do tipo 'Atraso Check-out'.
-
 SELECT M.id_multa AS id_multa, M.num_quarto AS num_quarto
 FROM Multa M
 WHERE M.tipo = 'Atraso Check-out';
@@ -42,13 +45,27 @@ SELECT cpf_p
 FROM Funcionario
 WHERE cpf_orientador IS NOT NULL;
 
---INNER JOIN
---MAX
---MIN
---AVG
---COUNT
---LEFT ou RIGHT ou FULL OUTER JOIN 
+--INNER JOIN com HAVING
 
+-- MAX e MIN
+INSERT INTO MULTA
+VALUES (3, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 100);
+INSERT INTO MULTA
+VALUES (4, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 20);
+
+SELECT MAX(VALOR)
+FROM MULTA;
+
+SELECT MIN(VALOR)
+FROM MULTA;
+
+-- AVG
+SELECT AVG(VALOR)
+FROM MULTA;
+
+--COUNT com GROUP BY
+
+--LEFT ou RIGHT ou >FULL OUTER JOIN< 
 SELECT P.nome, F.cargo
 FROM Pessoa P
 FULL OUTER JOIN Funcionario F ON P.cpf = F.cpf_p;
@@ -90,23 +107,18 @@ WHERE valor >= ALL (
 );
 
 --ORDER BY
-
 -- Seleciona as tuplas (cargo, salario) em ordem decrescente de valor de salário
-
 SELECT C.cargo_funcionario AS cargo, C.salario AS salario
 FROM Cargo C
 ORDER BY salario DESC;
 
---GROUP BY
-
+--GROUP BY e COUNT
 -- Seleciona cada tipo de pagamento e associa à quantidade de pagamentos daquele tipo feitos até o momento
-
 SELECT tipo_pagamento, COUNT(*) AS total_pagamentos
 FROM Pagamento
 GROUP BY tipo_pagamento;
 
---HAVING
-
+--HAVING e INNER JOIN
 -- Seleciona os CPF's dos hóspedes que já visitaram o hotel e realizaram um gasto histórico maior que 2000.00
 SELECT H.cpf_p AS cpf, SUM(P.valor) AS total_gasto
 FROM Hospede H
@@ -129,6 +141,8 @@ WHERE cargo = 'Gerente';
 select * from Gerentes;
 
 --GRANT / REVOKE*
+
+
 --USO DE RECORD
 DECLARE
     TYPE pessoa_record IS RECORD (
@@ -147,11 +161,37 @@ BEGIN
 END;
 
 --USO DE ESTRUTURA DE DADOS DO TIPO TABLE
---BLOCO ANÔNIMO
---CREATE PROCEDURE
+
+-- BLOCO ANONIMO
+DECLARE 
+ 	v_nome VARCHAR2(100) := 'João Silva';
+	mensagem VARCHAR2(100);
+BEGIN
+	mensagem := 'Olá, ' || v_nome || '!';
+	DBMS_OUTPUT.PUT_LINE(mensagem);
+END;
+/
+
+SELECT * FROM funcionario;
+
+--CREATE PROCEDURE com USO DE PARÂMETROS (IN, OUT ou IN OUT)
+
 --CREATE FUNCTION
---%TYPE
---%ROWTYPE
+
+-- %TYPE
+DECLARE
+    cargo_funcionario funcionario.cargo%TYPE;
+  	cpf_funcionario funcionario.cpf_p%TYPE;
+BEGIN
+ 	cargo_funcionario := 'Gerente';
+	cpf_funcionario := '12345678901';
+
+	DBMS_OUTPUT.PUT_LINE('Cargo Funcionário: ' || cargo_funcionario);
+  	DBMS_OUTPUT.PUT_LINE('CPF Funcionário: ' || cpf_funcionario);
+END;
+/
+
+--%ROWTYPE com LOOP EXIT WHEN
 
 --IF ELSIF
 DECLARE
@@ -187,7 +227,7 @@ FROM Pessoa P
 FULL OUTER JOIN Funcionario F 
 ON P.cpf = F.cpf_p;
 
---LOOP EXIT WHEN
+--LOOP EXIT WHEN e %ROWTYPE
 DECLARE
     CURSOR pessoa_cursor IS
         SELECT P.nome
@@ -285,7 +325,7 @@ BEGIN
     END;
 END;
 	
---USO DE PARÂMETROS (IN, OUT ou IN OUT)
+--USO DE PARÂMETROS (IN, OUT ou IN OUT) e CREATE PROCEDURE
 CREATE OR REPLACE PROCEDURE preco_diarias (
     valor_quarto IN NUMBER,
     qtd IN OUT NUMBER,
@@ -312,7 +352,7 @@ CREATE OR REPLACE PACKAGE util IS
 END util;
 /
 
--- CREATE OR REPLACE PACKAGE BODY
+-- CREATE OR REPLACE PACKAGE BODY e %ROWTYPE
 CREATE OR REPLACE PACKAGE BODY util IS
     PROCEDURE listar_pessoas IS
         CURSOR pessoa_cursor IS SELECT cpf, nome, numero, rua, bairro FROM Pessoa;
@@ -351,48 +391,4 @@ BEGIN
 END;
 /
 
--- DELETE 
-SELECT * FROM multa;
-DELETE FROM multa WHERE id_multa = 3;
-SELECT * FROM pagamento;
-DELETE FROM pagamento WHERE id_pagamento = 1;
 
--- BLOCO ANONIMO
-DECLARE 
- 	v_nome VARCHAR2(100) := 'João Silva';
-	mensagem VARCHAR2(100);
-BEGIN
-	mensagem := 'Olá, ' || v_nome || '!';
-	DBMS_OUTPUT.PUT_LINE(mensagem);
-END;
-/
-
-SELECT * FROM funcionario;
--- %TYPE
-DECLARE
-    cargo_funcionario funcionario.cargo%TYPE;
-  	cpf_funcionario funcionario.cpf_p%TYPE;
-BEGIN
- 	cargo_funcionario := 'Gerente';
-	cpf_funcionario := '12345678901';
-
-	DBMS_OUTPUT.PUT_LINE('Cargo Funcionário: ' || cargo_funcionario);
-  	DBMS_OUTPUT.PUT_LINE('CPF Funcionário: ' || cpf_funcionario);
-END;
-/
-
--- MIN AND MAX
-INSERT INTO MULTA
-VALUES (3, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 100);
-INSERT INTO MULTA
-VALUES (4, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 20);
-
-SELECT MIN(VALOR)
-FROM MULTA;
-
-SELECT MAX(VALOR)
-FROM MULTA;
-
--- AVG
-SELECT AVG(VALOR)
-FROM MULTA;
