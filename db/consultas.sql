@@ -15,8 +15,6 @@ update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
 --DELETE
 SELECT * FROM multa;
 DELETE FROM multa WHERE id_multa = 3;
-SELECT * FROM pagamento;
-DELETE FROM pagamento WHERE id_pagamento = 1;
 
 --SELECT-FROM-WHERE
 -- Seleciona as tuplas (id_multa, num_quarto) das reservas em que houve multa do tipo 'Atraso Check-out'.
@@ -49,9 +47,9 @@ WHERE cpf_orientador IS NOT NULL;
 
 -- MAX e MIN
 INSERT INTO MULTA
-VALUES (3, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 100);
+VALUES (4, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 100);
 INSERT INTO MULTA
-VALUES (4, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 20);
+VALUES (5, 1, '101','2024-02-01 a 2024-02-07', 'Atraso Check-out', 20);
 
 SELECT MAX(VALOR)
 FROM MULTA;
