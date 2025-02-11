@@ -151,7 +151,7 @@ REVOKE INSERT, UPDATE ON Reserva FROM usuario_hotel;
 DECLARE
     TYPE pessoa_record IS RECORD (
         cpf  Pessoa.cpf%TYPE,
-        nome Pessoa.nome%TYPE,
+        nome Pessoa.nome%TYPE
     );
     v_pessoa pessoa_record;
 BEGIN
@@ -383,11 +383,11 @@ CREATE OR REPLACE PACKAGE util IS
 END util;
 /
 
--- CREATE OR REPLACE PACKAGE BODY e %ROWTYPE
+-- CREATE OR REPLACE PACKAGE BODY
 CREATE OR REPLACE PACKAGE BODY util IS
     PROCEDURE listar_pessoas IS
-        CURSOR pessoa_cursor IS SELECT cpf, nome, numero, rua, bairro FROM Pessoa;
-        pessoa_record Pessoa%ROWTYPE;
+        CURSOR pessoa_cursor IS SELECT cpf, nome FROM Pessoa;
+        pessoa_record pessoa_cursor%ROWTYPE;
     BEGIN
         OPEN pessoa_cursor;
         LOOP
@@ -398,10 +398,12 @@ CREATE OR REPLACE PACKAGE BODY util IS
         CLOSE pessoa_cursor;
     END listar_pessoas;
 END util;
+/
 
 BEGIN
     util.listar_pessoas;
 END;
+/
 
 --CREATE OR REPLACE TRIGGER (COMANDO)
 CREATE OR REPLACE TRIGGER trg_auditoria_ddl
