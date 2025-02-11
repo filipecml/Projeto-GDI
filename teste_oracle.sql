@@ -232,8 +232,6 @@ update funcionario set cargo = 'Camareira' where cpf_p =23456789012;
 --DELETE
 SELECT * FROM multa;
 DELETE FROM multa WHERE id_multa = 3;
-SELECT * FROM pagamento;
-DELETE FROM pagamento WHERE id_pagamento = 1;
 
 --SELECT-FROM-WHERE
 -- Seleciona as tuplas (id_multa, num_quarto) das reservas em que houve multa do tipo 'Atraso Check-out'.
@@ -443,24 +441,24 @@ END;
 
 --IF ELSIF
 DECLARE
-    v_nome Funcionario.nome%TYPE;
-    v_salario Funcionario.salario%TYPE;
+    v_cpf Funcionario.cpf_p%TYPE;
+    v_cargo Funcionario.cargo%TYPE;
     v_categoria VARCHAR2(20);
 BEGIN
    
-    SELECT nome, salario INTO v_nome, v_salario 
-    FROM Funcionario 
-    WHERE id = 1;  
+    SELECT cpf_p, cargo INTO v_cpf, v_cargo
+    FROM Funcionario
+	WHERE cpf_p = '12345678901';   
 
-    IF v_salario < 2000 THEN
-        v_categoria := 'Baixo';
-    ELSIF v_salario BETWEEN 2000 AND 5000 THEN
-        v_categoria := 'Médio';
+    IF v_cargo = 'Gerente' THEN
+        v_categoria := 'Administracao';
+    ELSIF v_cargo = 'Camareira' THEN
+        v_categoria := 'Limpeza';
     ELSE
-        v_categoria := 'Alto';
+        v_categoria := 'Atendimento';
     END IF;
 
-    DBMS_OUTPUT.PUT_LINE('Funcionário: ' || v_nome || ' - Categoria: ' || v_categoria);
+    DBMS_OUTPUT.PUT_LINE('Funcionário: ' || v_cpf || ' - Categoria: ' || v_categoria);
 END;
 
 --CASE WHEN
@@ -501,9 +499,9 @@ DECLARE
 BEGIN
     WHILE v_contador <= 10 LOOP  
 
-        SELECT multa_value INTO v_multa
-        FROM Multas
-        WHERE contador = v_contador;
+        SELECT valor INTO v_multa
+        FROM multa
+        WHERE id_multa = v_contador;
 
         DBMS_OUTPUT.PUT_LINE('Multa encontrada para o contador ' || v_contador || ': ' || v_multa);
         
@@ -640,7 +638,6 @@ BEGIN
     END IF;
 END;
 /
-
 
 
 
