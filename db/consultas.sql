@@ -129,6 +129,13 @@ WHERE cargo = 'Gerente';
 select * from Gerentes;
 
 --GRANT / REVOKE*
+
+/*
+GRANT INSERT, UPDATE ON Reserva TO funcionarios;
+REVOKE INSERT, UPDATE ON Reserva FROM usuario_hotel;
+*/
+
+
 --USO DE RECORD
 DECLARE
     TYPE pessoa_record IS RECORD (
