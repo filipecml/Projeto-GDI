@@ -22,9 +22,26 @@ FROM Multa M
 WHERE M.tipo = 'Atraso Check-out';
 
 --BETWEEN
+SELECT num_quarto
+FROM Pagamento
+WHERE valor BETWEEN 500.00 AND 800.00;
+
 --IN
+SELECT num_quarto
+FROM Pagamento
+WHERE valor IN (900.00);
+
 --LIKE
+SELECT cpf, nome
+FROM Pessoa
+Where nome LIKE 'Ca%';
+
 --IS NULL ou IS NOT NULL
+--IS NOT NULL
+SELECT cpf_p
+FROM Funcionario
+WHERE cpf_orientador IS NOT NULL;
+
 --INNER JOIN
 --MAX
 --MIN
@@ -46,8 +63,32 @@ WHERE data_contratacao > (
 );
 
 --SUBCONSULTA COM IN
+SELECT num_quarto, valor
+FROM Pagamento
+WHERE valor in (
+	SELECT valor 
+	FROM Tipo_quarto 
+	WHERE valor > 100
+);
+
 --SUBCONSULTA COM ANY
---SUBCONSULTA COM ALL
+SELECT num_quarto, valor
+FROM Pagamento
+WHERE valor >= ANY (
+	SELECT valor 
+	FROM Tipo_quarto
+);
+
+--SUBCONSULTA COM ALL 
+-- A diferença entre o ANY e o ALL é que neste caso só serão selecionados os valores tais que são maiores que o valor máximo da consulta encadeada.
+-- Enquanto que no caso do ANY será todos os valores maiores que o valor mínimo da consulta encadeada.
+SELECT num_quarto, valor
+FROM Pagamento
+WHERE valor >= ALL (
+	SELECT valor 
+	FROM Tipo_quarto
+);
+
 --ORDER BY
 
 -- Seleciona as tuplas (cargo, salario) em ordem decrescente de valor de salário
@@ -67,7 +108,6 @@ GROUP BY tipo_pagamento;
 --HAVING
 
 -- Seleciona os CPF's dos hóspedes que já visitaram o hotel e realizaram um gasto histórico maior que 2000.00
-
 SELECT H.cpf_p AS cpf, SUM(P.valor) AS total_gasto
 FROM Hospede H
 INNER JOIN Realiza R ON R.hospede = H.cpf_p
@@ -105,14 +145,15 @@ BEGIN
     DBMS_OUTPUT.PUT_LINE('CPF: ' || v_pessoa.cpf);
     DBMS_OUTPUT.PUT_LINE('Nome: ' || v_pessoa.nome);
 END;
+
 --USO DE ESTRUTURA DE DADOS DO TIPO TABLE
 --BLOCO ANÔNIMO
 --CREATE PROCEDURE
 --CREATE FUNCTION
 --%TYPE
 --%ROWTYPE
---IF ELSIF
 
+--IF ELSIF
 DECLARE
     v_nome Funcionario.nome%TYPE;
     v_salario Funcionario.salario%TYPE;
@@ -135,7 +176,6 @@ BEGIN
 END;
 
 --CASE WHEN
-
 SELECT P.nome, 
        F.cargo,
        CASE 
@@ -148,7 +188,6 @@ FULL OUTER JOIN Funcionario F
 ON P.cpf = F.cpf_p;
 
 --LOOP EXIT WHEN
-
 DECLARE
     CURSOR pessoa_cursor IS
         SELECT P.nome
@@ -168,7 +207,6 @@ BEGIN
 END;
 
 --WHILE LOOP
-
 DECLARE
     v_contador NUMBER := 1;
     v_multa NUMBER;
@@ -186,7 +224,6 @@ BEGIN
 END;
 
 --FOR IN LOOP
-
 DECLARE
     v_contador NUMBER := 1;
     v_multa NUMBER;
@@ -204,6 +241,7 @@ BEGIN
     END LOOP;
 END;
 /
+	
 --SELECT … INTO
 DECLARE
     v_numero varchar(11);
@@ -234,7 +272,19 @@ END;
 /
 
 --EXCEPTION WHEN
-
+DECLARE
+    v_nome VARCHAR(20) := 'Pedro Elias';
+    v_resultado VARCHAR(100);
+BEGIN
+    BEGIN
+        SELECT nome INTO v_resultado FROM Pessoa WHERE nome = v_nome;
+    EXCEPTION
+        WHEN NO_DATA_FOUND THEN
+            INSERT INTO log_table (info)
+            VALUES ('Pessoa com nome ' || v_nome || ' não encontrada!');
+    END;
+END;
+	
 --USO DE PARÂMETROS (IN, OUT ou IN OUT)
 CREATE OR REPLACE PROCEDURE preco_diarias (
     valor_quarto IN NUMBER,
@@ -306,6 +356,7 @@ SELECT * FROM multa;
 DELETE FROM multa WHERE id_multa = 3;
 SELECT * FROM pagamento;
 DELETE FROM pagamento WHERE id_pagamento = 1;
+
 -- BLOCO ANONIMO
 DECLARE 
  	v_nome VARCHAR2(100) := 'João Silva';
