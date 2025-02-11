@@ -81,7 +81,6 @@ Pagamento(id pagamento, num_quarto*, período*,  tipo pagamento, valor, data)
 	num_quarto, periodo referenciam Reserva(num_quarto, periodo)
 */
 
-
 CREATE TABLE Fazer_Manutencao (
     cpf_funcionario VARCHAR2(11),
     numero_quarto VARCHAR2(10),
