@@ -187,7 +187,7 @@ VALUES ('101', '2024-02-01 a 2024-02-07', 'Cartão', 700.00, TO_DATE('2024-02-01
 INSERT INTO Pagamento (num_quarto, periodo, tipo_pagamento, valor, data) 
 VALUES ('101', '2024-02-01 a 2024-02-07', 'Cartão', 700.00, TO_DATE('2024-02-01', 'YYYY-MM-DD'));
 INSERT INTO Pagamento (num_quarto, periodo, tipo_pagamento, valor, data) 
-VALUES ('101', '2024-02-01 a 2024-02-07', 'Cartão', 700.00, TO_DATE('2024-02-01', 'YYYY-MM-DD'));
+VALUES ('101', '2024-02-01 a 2024-02-07', 'Cartão', 900.00, TO_DATE('2024-02-01', 'YYYY-MM-DD'));
 
 -- Inserindo Multas
 INSERT INTO Multa (id_pagamento, num_quarto, periodo, tipo, valor) 
@@ -195,7 +195,7 @@ VALUES (1, '101', '2024-02-01 a 2024-02-07', 'Atraso Check-out', 50.00);
 INSERT INTO Multa (id_pagamento, num_quarto, periodo, tipo, valor) 
 VALUES (1, '101', '2024-02-01 a 2024-02-07', 'Atraso Check-out', 50.00);
 INSERT INTO Multa (id_pagamento, num_quarto, periodo, tipo, valor) 
-VALUES (2, '101', '2024-02-01 a 2024-02-07', 'Atraso Check-out', 50.00);
+VALUES (2, '101', '2024-02-01 a 2024-02-07', 'Atraso Check-out', 150.00);
 
 -- Inserindo Telefones
 INSERT INTO Telefone (cpf_p, numero) VALUES ('12345678901', '11987654321');
