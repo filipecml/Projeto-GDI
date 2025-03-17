@@ -5,7 +5,7 @@ toposort = ['cargo.sql','pessoa.sql','tipo_quarto.sql','quarto.sql','reserva.sql
 
 # Lê todos os arquivos sql e os mescla em um único arquivo para teste.
 
-folder='./db/'
+folder='./db Orientado a Objetos/'
 file_extension='sql'
 output_file = 'teste_oracle.sql'
 files = glob.glob(os.path.join(folder, f'*.{file_extension}'))
