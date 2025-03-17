@@ -1,7 +1,7 @@
 import os
 import glob
 
-toposort = ['cargo.sql','pessoa.sql','tipo_quarto.sql','quarto.sql','reserva.sql','funcionario.sql','pagamento.sql']
+toposort = ['types.sql', 'tables.sql', 'sequences.sql', 'triggers.sql']
 
 # Lê todos os arquivos sql e os mescla em um único arquivo para teste.
 
