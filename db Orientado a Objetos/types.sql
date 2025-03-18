@@ -19,7 +19,6 @@ END;
 CREATE TYPE tp_telefone AS VARRAY(5) OF VARCHAR2(15);
 
 /* Dependente */
-
 CREATE OR REPLACE TYPE tp_dependente AS OBJECT (
     nome VARCHAR2(100),
     parentesco VARCHAR2(50)
@@ -101,7 +100,6 @@ CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
 CREATE OR REPLACE TYPE BODY tp_pagamento AS 
     MEMBER PROCEDURE detalhes_pagamento IS
     BEGIN
-        -- Exibindo os detalhes do pagamento
         DBMS_OUTPUT.PUT_LINE('Pagamento com ID: ' || id_pagamento || '.');
         DBMS_OUTPUT.PUT_LINE('Valor: ' || valor || '. Forma de pagamento: ' || tipo_pagamento || '.');
         DBMS_OUTPUT.PUT_LINE('Data de pagamento: ' || data_pagamento || '.');
@@ -127,7 +125,24 @@ CREATE OR REPLACE TYPE tp_multa AS OBJECT (
     periodo VARCHAR2(50),
     tipo VARCHAR2(50),
     valor NUMBER(10, 2)
+
+    ORDER MEMBER FUNCTION comparar_multas(p tp_multa) RETURN NUMBER
 );
+
+/* Método que compara valores de multas para determinar qual é maior (ORDER MEMBER FUNCTION) */
+CREATE TYPE BODY tp_multa AS
+    ORDER MEMBER FUNCTION comparar_multas(p tp_multa) RETURN NUMBER IS
+    BEGIN
+        IF self.valor < p.valor THEN
+            RETURN -1; /* Multa menor */
+        ELSIF self.valor = p.valor THEN
+            RETURN 0; /* Multa maior */
+        ELSE
+            RETURN 1;
+        END IF;
+    END;
+END;
+
 
 /* Realiza */
 CREATE OR REPLACE TYPE tp_realiza AS OBJECT (
