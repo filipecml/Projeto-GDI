@@ -22,9 +22,7 @@ with open(output_file, 'w', encoding='utf-8') as outfile:
             with open(file, 'r', encoding='utf-8') as infile:
                 outfile.write(infile.read())
                 outfile.write('\n\n')
-    with open('db/povoamento.sql', 'r', encoding='utf-8') as infile:
-        outfile.write(infile.read())
-        outfile.write('\n\n')
+   
     # with open('db/consultas.sql', 'r', encoding='utf-8') as infile:
     #     outfile.write(infile.read())
     #     outfile.write('\n\n')

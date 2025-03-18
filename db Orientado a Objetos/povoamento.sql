@@ -1,30 +1,10 @@
+ALTER TYPE tp_pessoa MODIFY ATTRIBUTE (numero VARCHAR2(15));
+
 -- Inserir dados na tabela tb_cargo
 INSERT INTO tb_cargo VALUES (tp_cargo('Gerente', 5000.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Recepcionista', 2500.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Camareira', 2000.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Manutenção', 2200.00));
-
--- Inserir dados na tabela tb_pessoa
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '12345678901', 'João Silva', '123', 'Rua A', 'Centro',
-        tp_telefone_nt('81987654321', '81987654322'),
-    )
-);
-
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '23456789012', 'Maria Oliveira', '456', 'Rua B', 'Boa Viagem',
-        tp_telefone_nt('81987654323'),
-    )
-);
-
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '34567890123', 'Carlos Souza', '789', 'Rua C', 'Pina',
-        tp_telefone_nt('81987654324'),
-    )
-);
 
 -- Inserir dados na tabela tb_tipo_quarto
 INSERT INTO tb_tipo_quarto VALUES (tp_tipo_quarto('Standard', 200.00));

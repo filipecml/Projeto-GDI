@@ -3,42 +3,37 @@ CREATE TABLE tb_cargo OF tp_cargo (
     cargo_funcionario PRIMARY KEY,
     salario NOT NULL
 );
-
-/* Pessoa */
-CREATE TABLE tb_pessoa OF tp_pessoa (
-    PRIMARY KEY (cpf),
-    nome NOT NULL,
-    CONSTRAINT nome_check CHECK (REGEXP_LIKE(nome, '^[A-Za-zÀ-ÿ\~\´\^[:space:]]+$')),
-    CONSTRAINT cpf_check CHECK (LENGTH(cpf) = 11 AND REGEXP_LIKE(cpf, '^\d{11}$')) 
-)
-NESTED TABLE telefones STORE AS telefones_nt;
+/
 
 /* Tipo_Quarto */
 CREATE TABLE tb_tipo_quarto OF tp_tipo_quarto (
     tipo PRIMARY KEY
 );
+/
 
 /* Quarto */
 CREATE TABLE tb_quarto OF tp_quarto (
     numero_quarto PRIMARY KEY,
     SCOPE FOR (tipo_quarto) IS tb_tipo_quarto
 );
+/
 
 /* Reserva */
-CREATE TABLE tb_reserva OF tp_reserva (
-    periodo NOT NULL,
-    CONSTRAINT pk_reserva PRIMARY KEY (num_quarto, periodo),
-    CONSTRAINT fk_reserva_num_quarto FOREIGN KEY (num_quarto) REFERENCES tb_quarto(numero_quarto)
-);
+CREATE TABLE tb_reserva OF tp_reserva;
+/
+ALTER TABLE tb_reserva
+ADD CONSTRAINT pk_reserva PRIMARY KEY (num_quarto, periodo);
+/
 
 /* Funcionário */
 CREATE TABLE tb_funcionario OF tp_funcionario (
     cargo WITH ROWID REFERENCES tb_cargo,
     data_contratacao NOT NULL,
-    SCOPE FOR (cpf_orientador) IS tb_funcionario,
-    CONSTRAINT pk_funcionario PRIMARY KEY (cpf_p),
-    CONSTRAINT fk_funcionario_pessoa FOREIGN KEY (cpf_p) REFERENCES tb_pessoa(cpf)
+    SCOPE FOR (orientador) IS tb_funcionario,
+    CONSTRAINT pk_funcionario PRIMARY KEY (cpf),
+    CONSTRAINT fk_funcionario_pessoa FOREIGN KEY (cpf) REFERENCES tb_pessoa(cpf)
 );
+/
 
 /* Pagamento */
 CREATE TABLE tb_pagamento OF tp_pagamento (
@@ -49,6 +44,7 @@ CREATE TABLE tb_pagamento OF tp_pagamento (
     valor NOT NULL,
     data_pagamento NOT NULL
 );
+/
 
 /* Fazer Manutenção */
 CREATE TABLE tb_fazer_manutencao OF tp_fazer_manutencao (
@@ -56,12 +52,14 @@ CREATE TABLE tb_fazer_manutencao OF tp_fazer_manutencao (
     CONSTRAINT fk_fazer_manutencao_funcionario FOREIGN KEY (cpf_funcionario) REFERENCES tb_funcionario(cpf_p),
     CONSTRAINT fk_fazer_manutencao_quarto FOREIGN KEY (numero_quarto) REFERENCES tb_quarto(numero_quarto)
 );
+/
 
 /* Hóspede */
 CREATE TABLE tb_hospede OF tp_hospede (
     CONSTRAINT pk_hospede PRIMARY KEY (cpf_p),
     CONSTRAINT fk_hospede_pessoa FOREIGN KEY (cpf_p) REFERENCES tb_pessoa(cpf)
 );
+/
 
 /* Multa */
 CREATE TABLE tb_multa OF tp_multa (
@@ -72,6 +70,7 @@ CREATE TABLE tb_multa OF tp_multa (
     tipo NOT NULL,
     valor NOT NULL
 );
+/
 
 /* Realiza */
 CREATE TABLE tb_realiza OF tp_realiza (
@@ -82,3 +81,4 @@ CREATE TABLE tb_realiza OF tp_realiza (
     CONSTRAINT fk_realiza_hospede FOREIGN KEY (cpf_hospede) REFERENCES tb_hospede(cpf_p),
     CONSTRAINT fk_realiza_funcionario FOREIGN KEY (cpf_funcionario) REFERENCES tb_funcionario(cpf_p)
 );
+/

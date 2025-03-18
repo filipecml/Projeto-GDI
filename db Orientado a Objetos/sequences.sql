@@ -2,8 +2,10 @@ CREATE SEQUENCE seq_pagamento
     START WITH 1
     INCREMENT BY 1
     NOCACHE;
+/
 
 CREATE SEQUENCE seq_multa
     START WITH 1
     INCREMENT BY 1
     NOCACHE;
+/
