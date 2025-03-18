@@ -8,24 +8,21 @@ INSERT INTO tb_cargo VALUES (tp_cargo('Manutenção', 2200.00));
 INSERT INTO tb_pessoa VALUES (
     tp_pessoa(
         '12345678901', 'João Silva', '123', 'Rua A', 'Centro',
-        tp_telefone('81987654321', '81987654322'),
-        tp_nt_dependente(tp_dependente('Maria Silva', 'Filha'))
+        tp_telefone_nt('81987654321', '81987654322'),
     )
 );
 
 INSERT INTO tb_pessoa VALUES (
     tp_pessoa(
         '23456789012', 'Maria Oliveira', '456', 'Rua B', 'Boa Viagem',
-        tp_telefone('81987654323'),
-        tp_nt_dependente(tp_dependente('Pedro Oliveira', 'Filho'))
+        tp_telefone_nt('81987654323'),
     )
 );
 
 INSERT INTO tb_pessoa VALUES (
     tp_pessoa(
         '34567890123', 'Carlos Souza', '789', 'Rua C', 'Pina',
-        tp_telefone('81987654324'),
-        tp_nt_dependente()
+        tp_telefone_nt('81987654324'),
     )
 );
 
