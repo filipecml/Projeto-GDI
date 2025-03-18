@@ -67,6 +67,15 @@ CREATE OR REPLACE TYPE tp_reserva AS OBJECT (
     periodo VARCHAR2(50)
 );
 
+/* Criação da CONSTRUCTOR FUNCTION do tipo de objeto reserva */
+CREATE OR REPLACE FUNCTION criar_reserva (
+    num_quarto VARCHAR2, 
+    periodo VARCHAR2
+) RETURN tp_reserva IS
+BEGIN
+    RETURN tp_reserva(num_quarto, periodo);
+END;
+
 /* Funcionário */
 CREATE OR REPLACE TYPE tp_funcionario AS OBJECT (
     cpf_p VARCHAR2(11),
