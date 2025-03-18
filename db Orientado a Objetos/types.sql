@@ -1,8 +1,19 @@
 /* Cargo */
 CREATE OR REPLACE TYPE tp_cargo AS OBJECT (
     cargo_funcionario VARCHAR2(50),
-    salario NUMBER(10, 2)
+    salario NUMBER(10, 2),
+    MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER
 );
+
+/* Método para calcular salário anual (MEMBER FUCTION e TYPE BODY) */
+CREATE OR REPLACE TYPE BODY tp_cargo AS 
+	MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER IS
+        salario_Anual NUMBER(10,2);
+	BEGIN
+        salario_Anual := salario*12;
+		RETURN salario_Anual;
+	END;
+END;
 
 /* Telefone*/
 CREATE TYPE tp_telefone AS VARRAY(5) OF VARCHAR2(15);
