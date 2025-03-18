@@ -1,29 +1,54 @@
 /* Cargo */
 CREATE OR REPLACE TYPE tp_cargo AS OBJECT (
     cargo_funcionario VARCHAR2(50),
-    salario NUMBER(10, 2)
+    salario NUMBER(10, 2),
+    MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER
 );
+
+/* Método para calcular salário anual (MEMBER FUCTION) */
+CREATE OR REPLACE TYPE BODY tp_cargo AS 
+	MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER IS
+        salario_Anual NUMBER(10,2);
+	BEGIN
+        salario_Anual := salario*12;
+		RETURN salario_Anual;
+	END;
+END;
 
 /* Telefone*/
---(Com VARRAY)
---CREATE TYPE tp_telefone_v AS VARRAY(5) OF VARCHAR2(15);
+CREATE TYPE tp_telefone AS VARRAY(5) OF VARCHAR2(15);
 
---(Com NESTED TABLE)
+/* Dependente */
 
-CREATE TYPE tp_telefone_nt AS OBJECT (
-    numero VARCHAR2(15)
+CREATE OR REPLACE TYPE tp_dependente AS OBJECT (
+    nome VARCHAR2(100),
+    parentesco VARCHAR2(50)
 );
 
-CREATE TYPE nt_telefone AS TABLE OF tp_telefone_nt;
+CREATE TYPE tp_nt_dependente AS TABLE OF tp_dependente;
 
+/* Pessoa */
 CREATE OR REPLACE TYPE tp_pessoa AS OBJECT (
     cpf VARCHAR2(11),
     nome VARCHAR2(100),
     numero VARCHAR2(11),
     rua VARCHAR2(100),
     bairro VARCHAR2(100),
-    telefones nt_telefone
-);
+    telefone tp_telefone,
+    dependente tp_nt_dependente,
+
+    MEMBER PROCEDURE detalhes_pessoa
+) NOT INSTANTIABLE; /* A classe pessoa não pode ser instânciada de forma independente, pois precisa de subtipos para a instanciação dos objetos */ 
+
+/* Método que detalha a pessoa (MEMBER PROCEDURE) */
+CREATE OR REPLACE TYPE BODY tp_pessoa AS 
+    MEMBER PROCEDURE detalhes_pessoa IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Nome: ' || nome || '.');
+        DBMS_OUTPUT.PUT_LINE('CPF: ' || cpf || '.');
+        DBMS_OUTPUT.PUT_LINE('Endereço: ' || rua || ', ' || numero || ', ' || bairro || '.');
+    END;
+END;
 
 /* Tipo_Quarto */
 CREATE OR REPLACE TYPE tp_tipo_quarto AS OBJECT (
@@ -48,18 +73,31 @@ CREATE OR REPLACE TYPE tp_funcionario AS OBJECT (
     cpf_p VARCHAR2(11),
     cargo REF tp_cargo,
     data_contratacao DATE,
-    cpf_orientador REF tp_funcionario
+    orientador REF tp_funcionario
 );
 
 /* Pagamento */
 CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
     id_pagamento NUMBER,
-    num_quarto REF tp_quarto,
+    quarto REF tp_quarto,
     periodo VARCHAR2(50),
     tipo_pagamento VARCHAR2(50),
     valor NUMBER(10, 2),
-    data_pagamento DATE
+    data_pagamento DATE,
+
+    MEMBER PROCEDURE detalhes_pagamento
 );
+
+/* Método que detalha o pagamento (MEMBER PROCEDURE) */
+CREATE OR REPLACE TYPE BODY tp_pagamento AS 
+    MEMBER PROCEDURE detalhes_pagamento IS
+    BEGIN
+        -- Exibindo os detalhes do pagamento
+        DBMS_OUTPUT.PUT_LINE('Pagamento com ID: ' || id_pagamento || '.');
+        DBMS_OUTPUT.PUT_LINE('Valor: ' || valor || '. Forma de pagamento: ' || tipo_pagamento || '.');
+        DBMS_OUTPUT.PUT_LINE('Data de pagamento: ' || data_pagamento || '.');
+    END;
+END;
 
 /* Fazer Manutenção */
 CREATE OR REPLACE TYPE tp_fazer_manutencao AS OBJECT (
@@ -75,8 +113,8 @@ CREATE OR REPLACE TYPE tp_hospede AS OBJECT (
 /* Multa */
 CREATE OR REPLACE TYPE tp_multa AS OBJECT (
     id_multa NUMBER,
-    id_pagamento REF tp_pagamento,
-    num_quarto REF tp_quarto,
+    pagamento REF tp_pagamento,
+    quarto REF tp_quarto,
     periodo VARCHAR2(50),
     tipo VARCHAR2(50),
     valor NUMBER(10, 2)
