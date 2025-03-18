@@ -6,12 +6,12 @@ CREATE TABLE tb_cargo OF tp_cargo (
 
 /* Pessoa */
 CREATE TABLE tb_pessoa OF tp_pessoa (
-    cpf PRIMARY KEY,
+    PRIMARY KEY (cpf),
     nome NOT NULL,
     CONSTRAINT nome_check CHECK (REGEXP_LIKE(nome, '^[A-Za-zÀ-ÿ\~\´\^[:space:]]+$')),
-    CONSTRAINT cpf_check CHECK (LENGTH(cpf) = 11 and REGEXP_LIKE(cpf, '^\d{11}$'))
+    CONSTRAINT cpf_check CHECK (LENGTH(cpf) = 11 AND REGEXP_LIKE(cpf, '^\d{11}$')) 
 )
-NESTED TABLE dependente STORE AS dependente_nt;
+NESTED TABLE telefones STORE AS telefones_nt;
 
 /* Tipo_Quarto */
 CREATE TABLE tb_tipo_quarto OF tp_tipo_quarto (
@@ -33,9 +33,9 @@ CREATE TABLE tb_reserva OF tp_reserva (
 
 /* Funcionário */
 CREATE TABLE tb_funcionario OF tp_funcionario (
-    SCOPE FOR (cargo) IS tb_cargo,
+    cargo WITH ROWID REFERENCES tb_cargo,
     data_contratacao NOT NULL,
-    SCOPE FOR (orientador) IS tb_funcionario,
+    SCOPE FOR (cpf_orientador) IS tb_funcionario,
     CONSTRAINT pk_funcionario PRIMARY KEY (cpf_p),
     CONSTRAINT fk_funcionario_pessoa FOREIGN KEY (cpf_p) REFERENCES tb_pessoa(cpf)
 );
@@ -43,7 +43,7 @@ CREATE TABLE tb_funcionario OF tp_funcionario (
 /* Pagamento */
 CREATE TABLE tb_pagamento OF tp_pagamento (
     id_pagamento PRIMARY KEY,
-    SCOPE FOR (quarto) IS tb_quarto,
+    SCOPE FOR (num_quarto) IS tb_quarto,
     periodo NOT NULL,
     tipo_pagamento NOT NULL,
     valor NOT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE tb_hospede OF tp_hospede (
 /* Multa */
 CREATE TABLE tb_multa OF tp_multa (
     id_multa PRIMARY KEY,
-    SCOPE FOR (pagamento) IS tb_pagamento,
-    SCOPE FOR (quarto) IS tb_quarto,
+    SCOPE FOR (id_pagamento) IS tb_pagamento,
+    SCOPE FOR (num_quarto) IS tb_quarto,
     periodo NOT NULL,
     tipo NOT NULL,
     valor NOT NULL
