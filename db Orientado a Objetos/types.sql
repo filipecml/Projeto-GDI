@@ -121,31 +121,24 @@ CREATE OR REPLACE TYPE tp_fazer_manutencao AS OBJECT (
     numero_quarto VARCHAR2(10)
 );
 
-/* Hóspede */
-CREATE OR REPLACE TYPE tp_hospede AS OBJECT (
-    cpf_p VARCHAR2(11) 
+CREATE OR REPLACE TYPE tp_hospede UNDER tp_pessoa (
+    cpf_p VARCHAR2(11), -- Atributo adicional específico de hóspede
 
-    MEMBER PROCEDURE detalhes_pessoa
+    OVERRIDING MEMBER PROCEDURE detalhes_pessoa -- Sobrescreve o método da superclasse
 );
+/
 
-CREATE OR REPLACE TYPE tp_hospede AS 
-
-    MEMBER PROCEDURE detalhes_pessoa IS
+CREATE OR REPLACE TYPE BODY tp_hospede AS 
+    OVERRIDING MEMBER PROCEDURE detalhes_pessoa IS
     BEGIN
-        -- Detalhes básicos da pessoa
-        DBMS_OUTPUT.PUT_LINE('CPF: ' || cpf || '.');
-        DBMS_OUTPUT.PUT_LINE('Nome: ' || nome || '.');
-        DBMS_OUTPUT.PUT_LINE('Endereço: ' || rua || ', ' || bairro || '.');
-        DBMS_OUTPUT.PUT_LINE('Telefone: ' || telefone.ddd || telefone.numero || '.');
-        
-        -- Detalhes específicos para hospede
-        DBMS_OUTPUT.PUT_LINE('Este é um hóspede.');
+        -- Chama o método da superclasse (tp_pessoa)
+        (SELF AS tp_pessoa).detalhes_pessoa;
 
-        IF dependente IS NOT NULL THEN
-            DBMS_OUTPUT.PUT_LINE('Dependente: ' || dependente.nome_dependente || '.');  
-        END IF;
+        -- Adiciona funcionalidades específicas do subtipo (tp_hospede)
+        DBMS_OUTPUT.PUT_LINE('CPF do Hospede: ' || cpf_p || '.');
     END;
 END;
+/
 
 /* Multa */
 CREATE OR REPLACE TYPE tp_multa AS OBJECT (
