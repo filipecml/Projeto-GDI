@@ -50,13 +50,13 @@ CREATE OR REPLACE TYPE tp_funcionario AS OBJECT (
     cpf_p VARCHAR2(11),
     cargo REF tp_cargo,
     data_contratacao DATE,
-    cpf_orientador REF tp_funcionario
+    orientador REF tp_funcionario
 );
 
 /* Pagamento */
 CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
     id_pagamento NUMBER,
-    num_quarto REF tp_quarto,
+    quarto REF tp_quarto,
     periodo VARCHAR2(50),
     tipo_pagamento VARCHAR2(50),
     valor NUMBER(10, 2),
@@ -77,8 +77,8 @@ CREATE OR REPLACE TYPE tp_hospede AS OBJECT (
 /* Multa */
 CREATE OR REPLACE TYPE tp_multa AS OBJECT (
     id_multa NUMBER,
-    id_pagamento REF tp_pagamento,
-    num_quarto REF tp_quarto,
+    pagamento REF tp_pagamento,
+    quarto REF tp_quarto,
     periodo VARCHAR2(50),
     tipo VARCHAR2(50),
     valor NUMBER(10, 2)
