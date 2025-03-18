@@ -74,7 +74,16 @@ CREATE OR REPLACE TYPE tp_funcionario AS OBJECT (
     cargo REF tp_cargo,
     data_contratacao DATE,
     orientador REF tp_funcionario
+    MAP MEMBER FUNCTION tempo_contribuicao RETURN NUMBER
 );
+
+/* Método que retorna o tempo de contribuição de um funcionário (MAP MEMBER FUNCTION) */
+CREATE OR REPLACE TYPE BODY tp_funcionario AS
+    MAP MEMBER FUNCTION tempo_contribuicao RETURN NUMBER IS
+    BEGIN
+        RETURN SYSDATE - data_contratacao;
+    END;
+END;
 
 /* Pagamento */
 CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
