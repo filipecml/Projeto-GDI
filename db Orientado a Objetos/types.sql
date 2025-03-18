@@ -5,7 +5,7 @@ CREATE OR REPLACE TYPE tp_cargo AS OBJECT (
     MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER
 );
 
-/* Método para calcular salário anual (MEMBER FUCTION e TYPE BODY) */
+/* Método para calcular salário anual (MEMBER FUCTION) */
 CREATE OR REPLACE TYPE BODY tp_cargo AS 
 	MEMBER FUNCTION calcular_salarioAnual RETURN NUMBER IS
         salario_Anual NUMBER(10,2);
@@ -35,8 +35,20 @@ CREATE OR REPLACE TYPE tp_pessoa AS OBJECT (
     rua VARCHAR2(100),
     bairro VARCHAR2(100),
     telefone tp_telefone,
-    dependente tp_nt_dependente
+    dependente tp_nt_dependente,
+
+    MEMBER PROCEDURE detalhes_pessoa
 );
+
+/* Método que detalha a pessoa (MEMBER PROCEDURE) */
+CREATE OR REPLACE TYPE BODY tp_pessoa AS 
+    MEMBER PROCEDURE detalhes_pessoa IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Nome: ' || nome || '.');
+        DBMS_OUTPUT.PUT_LINE('CPF: ' || cpf || '.');
+        DBMS_OUTPUT.PUT_LINE('Endereço: ' || rua || ', ' || numero || ', ' || bairro || '.');
+    END;
+END;
 
 /* Tipo_Quarto */
 CREATE OR REPLACE TYPE tp_tipo_quarto AS OBJECT (
@@ -71,8 +83,21 @@ CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
     periodo VARCHAR2(50),
     tipo_pagamento VARCHAR2(50),
     valor NUMBER(10, 2),
-    data_pagamento DATE
+    data_pagamento DATE,
+
+    MEMBER PROCEDURE detalhes_pagamento
 );
+
+/* Método que detalha o pagamento (MEMBER PROCEDURE) */
+CREATE OR REPLACE TYPE BODY tp_pagamento AS 
+    MEMBER PROCEDURE detalhes_pagamento IS
+    BEGIN
+        -- Exibindo os detalhes do pagamento
+        DBMS_OUTPUT.PUT_LINE('Pagamento com ID: ' || id_pagamento || '.');
+        DBMS_OUTPUT.PUT_LINE('Valor: ' || valor || '. Forma de pagamento: ' || tipo_pagamento || '.');
+        DBMS_OUTPUT.PUT_LINE('Data de pagamento: ' || data_pagamento || '.');
+    END;
+END;
 
 /* Fazer Manutenção */
 CREATE OR REPLACE TYPE tp_fazer_manutencao AS OBJECT (
