@@ -37,8 +37,8 @@ CREATE OR REPLACE TYPE tp_pessoa AS OBJECT (
     dependente tp_nt_dependente,
 
     MEMBER PROCEDURE detalhes_pessoa
-) NOT INSTANTIABLE; /* A classe pessoa não pode ser instânciada de forma independente, pois precisa de subtipos para a instanciação dos objetos */ 
-
+) NOT INSTANTIABLE NOT FINAL; /* A classe pessoa não pode ser instânciada de forma independente, pois precisa de subtipos para a instanciação dos objetos */ 
+/
 /* Método que detalha a pessoa (MEMBER PROCEDURE) */
 CREATE OR REPLACE TYPE BODY tp_pessoa AS 
     MEMBER PROCEDURE detalhes_pessoa IS
@@ -123,8 +123,29 @@ CREATE OR REPLACE TYPE tp_fazer_manutencao AS OBJECT (
 
 /* Hóspede */
 CREATE OR REPLACE TYPE tp_hospede AS OBJECT (
-    cpf_p VARCHAR2(11)
+    cpf_p VARCHAR2(11) 
+
+    MEMBER PROCEDURE detalhes_pessoa
 );
+
+CREATE OR REPLACE TYPE tp_hospede AS 
+
+    MEMBER PROCEDURE detalhes_pessoa IS
+    BEGIN
+        -- Detalhes básicos da pessoa
+        DBMS_OUTPUT.PUT_LINE('CPF: ' || cpf || '.');
+        DBMS_OUTPUT.PUT_LINE('Nome: ' || nome || '.');
+        DBMS_OUTPUT.PUT_LINE('Endereço: ' || rua || ', ' || bairro || '.');
+        DBMS_OUTPUT.PUT_LINE('Telefone: ' || telefone.ddd || telefone.numero || '.');
+        
+        -- Detalhes específicos para hospede
+        DBMS_OUTPUT.PUT_LINE('Este é um hóspede.');
+
+        IF dependente IS NOT NULL THEN
+            DBMS_OUTPUT.PUT_LINE('Dependente: ' || dependente.nome_dependente || '.');  
+        END IF;
+    END;
+END;
 
 /* Multa */
 CREATE OR REPLACE TYPE tp_multa AS OBJECT (
