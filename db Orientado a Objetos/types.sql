@@ -138,10 +138,9 @@ CREATE OR REPLACE TYPE BODY tp_hospede AS
         (SELF AS tp_pessoa).detalhes_pessoa;
 
         -- Adiciona funcionalidades específicas do subtipo (tp_hospede)
-        DBMS_OUTPUT.PUT_LINE('CPF do Hospede: ' || cpf_p || '.');
+        DBMS_OUTPUT.PUT_LINE('CPF do Hospede: ' || cpf || '.');
     END;
 END;
-/
 
 /* Multa */
 CREATE OR REPLACE TYPE tp_multa AS OBJECT (
