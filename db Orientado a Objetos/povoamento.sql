@@ -4,27 +4,6 @@ INSERT INTO tb_cargo VALUES (tp_cargo('Recepcionista', 2500.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Camareira', 2000.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Manutenção', 2200.00));
 
--- Inserir dados na tabela tb_pessoa
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '12345678901', 'João Silva', '123', 'Rua A', 'Centro',
-        tp_telefone_nt('81987654321', '81987654322'),
-    )
-);
-
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '23456789012', 'Maria Oliveira', '456', 'Rua B', 'Boa Viagem',
-        tp_telefone_nt('81987654323'),
-    )
-);
-
-INSERT INTO tb_pessoa VALUES (
-    tp_pessoa(
-        '34567890123', 'Carlos Souza', '789', 'Rua C', 'Pina',
-        tp_telefone_nt('81987654324'),
-    )
-);
 
 -- Inserir dados na tabela tb_tipo_quarto
 INSERT INTO tb_tipo_quarto VALUES (tp_tipo_quarto('Standard', 200.00));
@@ -58,24 +37,41 @@ INSERT INTO tb_reserva VALUES (tp_reserva('101', '2023-10-01 a 2023-10-05'));
 INSERT INTO tb_reserva VALUES (tp_reserva('201', '2023-10-10 a 2023-10-15'));
 INSERT INTO tb_reserva VALUES (tp_reserva('301', '2023-11-01 a 2023-11-07'));
 
+
 -- Inserir dados na tabela tb_funcionario
 INSERT INTO tb_funcionario VALUES (
     tp_funcionario(
         '12345678901',
-        (SELECT REF(c) FROM tb_cargo c WHERE c.cargo_funcionario = 'Gerente'),
-        TO_DATE('2020-01-15', 'YYYY-MM-DD'),
+        'João Silva', 
+        '123',
+        'Rua A', 
+        'Centro', 
+        nt_telefone( 
+            tp_telefone_nt('81987654321'),
+            tp_telefone_nt('81987654322') 
+        ),
+        (SELECT REF(c) FROM tb_cargo c WHERE c.cargo_funcionario = 'Gerente'), 
+        TO_DATE('2020-01-15', 'YYYY-MM-DD'), 
         NULL
     )
 );
 
 INSERT INTO tb_funcionario VALUES (
     tp_funcionario(
-        '23456789012',
+    	'23456789012', 
+    	'Maria Oliveira', 
+    	'456', 
+    	'Rua B', 
+    	'Boa Viagem',
+     	nt_telefone(
+    		tp_telefone_nt('81987654323')
+    	),
         (SELECT REF(c) FROM tb_cargo c WHERE c.cargo_funcionario = 'Recepcionista'),
         TO_DATE('2021-05-20', 'YYYY-MM-DD'),
-        (SELECT REF(f) FROM tb_funcionario f WHERE f.cpf_p = '12345678901')
+        (SELECT REF(f) FROM tb_funcionario f WHERE f.cpf = '12345678901')
     )
 );
+
 
 -- Inserir dados na tabela tb_pagamento
 INSERT INTO tb_pagamento VALUES (
@@ -101,7 +97,18 @@ INSERT INTO tb_pagamento VALUES (
 );
 
 -- Inserir dados na tabela tb_hospede
-INSERT INTO tb_hospede VALUES (tp_hospede('34567890123'));
+INSERT INTO tb_hospede VALUES (
+    tp_hospede(
+    '34567890123', 
+    'Filipe', 
+    '250', 
+    'Estrada do lado', 
+    'Torreões',
+    nt_telefone(
+    		tp_telefone_nt('81940028922')
+    	)
+    )
+    );
 
 -- Inserir dados na tabela tb_fazer_manutencao
 INSERT INTO tb_fazer_manutencao VALUES (tp_fazer_manutencao('23456789012', '101'));

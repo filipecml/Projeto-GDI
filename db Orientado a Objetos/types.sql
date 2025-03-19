@@ -16,15 +16,15 @@ CREATE OR REPLACE TYPE BODY tp_cargo AS
 END;
 
 /* Telefone*/
-CREATE TYPE tp_telefone AS VARRAY(5) OF VARCHAR2(15);
+--(Com VARRAY)
+ --CREATE TYPE tp_telefone_v AS VARRAY(5) OF VARCHAR2(15);
 
-/* Dependente */
-CREATE OR REPLACE TYPE tp_dependente AS OBJECT (
-    nome VARCHAR2(100),
-    parentesco VARCHAR2(50)
-);
+--(Com NESTED TABLE)
+CREATE TYPE tp_telefone_nt AS OBJECT (
+     numero VARCHAR2(15)
+ );
 
-CREATE TYPE tp_nt_dependente AS TABLE OF tp_dependente;
+ CREATE TYPE nt_telefone AS TABLE OF tp_telefone_nt;
 
 /* Pessoa */
 CREATE OR REPLACE TYPE tp_pessoa AS OBJECT (
@@ -33,12 +33,12 @@ CREATE OR REPLACE TYPE tp_pessoa AS OBJECT (
     numero VARCHAR2(11),
     rua VARCHAR2(100),
     bairro VARCHAR2(100),
-    telefone tp_telefone,
-    dependente tp_nt_dependente,
+    telefones nt_telefone,
 
     MEMBER PROCEDURE detalhes_pessoa
-) NOT INSTANTIABLE NOT FINAL; /* A classe pessoa não pode ser instânciada de forma independente, pois precisa de subtipos para a instanciação dos objetos */ 
-/
+) NOT INSTANTIABLE NOT FINAL; 
+/* A classe pessoa não pode ser instânciada de forma independente, pois precisa de subtipos para a instanciação dos objetos */ 
+
 /* Método que detalha a pessoa (MEMBER PROCEDURE) */
 CREATE OR REPLACE TYPE BODY tp_pessoa AS 
     MEMBER PROCEDURE detalhes_pessoa IS
@@ -77,21 +77,25 @@ BEGIN
 END;
 
 /* Funcionário */
-CREATE OR REPLACE TYPE tp_funcionario AS OBJECT (
-    cpf_p VARCHAR2(11),
+CREATE OR REPLACE TYPE tp_funcionario UNDER tp_pessoa (
     cargo REF tp_cargo,
     data_contratacao DATE,
-    orientador REF tp_funcionario
-    MAP MEMBER FUNCTION tempo_contribuicao RETURN NUMBER
+    orientador REF tp_funcionario,
+
+    FINAL MEMBER FUNCTION calcular_bonus RETURN NUMBER
 );
+/
 
 /* Método que retorna o tempo de contribuição de um funcionário (MAP MEMBER FUNCTION) */
 CREATE OR REPLACE TYPE BODY tp_funcionario AS
-    MAP MEMBER FUNCTION tempo_contribuicao RETURN NUMBER IS
+    FINAL MEMBER FUNCTION calcular_bonus RETURN NUMBER IS
+        bonus NUMBER(10, 2);
     BEGIN
-        RETURN SYSDATE - data_contratacao;
+        bonus := (SYSDATE - data_contratacao) * 0.1;
+        RETURN bonus;
     END;
 END;
+/
 
 /* Pagamento */
 CREATE OR REPLACE TYPE tp_pagamento AS OBJECT (
@@ -121,9 +125,8 @@ CREATE OR REPLACE TYPE tp_fazer_manutencao AS OBJECT (
     numero_quarto VARCHAR2(10)
 );
 
+/* Hospede */
 CREATE OR REPLACE TYPE tp_hospede UNDER tp_pessoa (
-    cpf_p VARCHAR2(11), -- Atributo adicional específico de hóspede
-
     OVERRIDING MEMBER PROCEDURE detalhes_pessoa -- Sobrescreve o método da superclasse
 );
 /
@@ -147,7 +150,7 @@ CREATE OR REPLACE TYPE tp_multa AS OBJECT (
     quarto REF tp_quarto,
     periodo VARCHAR2(50),
     tipo VARCHAR2(50),
-    valor NUMBER(10, 2)
+    valor NUMBER(10, 2),
 
     ORDER MEMBER FUNCTION comparar_multas(p tp_multa) RETURN NUMBER
 );
@@ -174,5 +177,15 @@ CREATE OR REPLACE TYPE tp_realiza AS OBJECT (
     cpf_hospede VARCHAR2(11),
     cpf_funcionario VARCHAR2(11),
     data_check_in DATE,
-    data_check_out DATE
+
+    MAP MEMBER FUNCTION tempo_hospedado RETURN NUMBER
 );
+ALTER TYPE tp_realiza ADD ATTRIBUTE (data_check_out DATE) CASCADE;
+
+/* Método que retorna o tempo de hospedagem de um quarto (MAP MEMBER) */
+CREATE OR REPLACE TYPE BODY tp_realiza AS
+    MAP MEMBER FUNCTION tempo_hospedado RETURN NUMBER IS
+    BEGIN
+        RETURN SYSDATE - data_check_in;
+    END;
+END;
