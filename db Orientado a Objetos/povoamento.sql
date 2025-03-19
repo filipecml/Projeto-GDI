@@ -4,7 +4,6 @@ INSERT INTO tb_cargo VALUES (tp_cargo('Recepcionista', 2500.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Camareira', 2000.00));
 INSERT INTO tb_cargo VALUES (tp_cargo('Manutenção', 2200.00));
 
-
 -- Inserir dados na tabela tb_tipo_quarto
 INSERT INTO tb_tipo_quarto VALUES (tp_tipo_quarto('Standard', 200.00));
 INSERT INTO tb_tipo_quarto VALUES (tp_tipo_quarto('Luxo', 400.00));
@@ -36,7 +35,6 @@ INSERT INTO tb_quarto VALUES (
 INSERT INTO tb_reserva VALUES (tp_reserva('101', '2023-10-01 a 2023-10-05'));
 INSERT INTO tb_reserva VALUES (tp_reserva('201', '2023-10-10 a 2023-10-15'));
 INSERT INTO tb_reserva VALUES (tp_reserva('301', '2023-11-01 a 2023-11-07'));
-
 
 -- Inserir dados na tabela tb_funcionario
 INSERT INTO tb_funcionario VALUES (
@@ -71,7 +69,6 @@ INSERT INTO tb_funcionario VALUES (
         (SELECT REF(f) FROM tb_funcionario f WHERE f.cpf = '12345678901')
     )
 );
-
 
 -- Inserir dados na tabela tb_pagamento
 INSERT INTO tb_pagamento VALUES (
