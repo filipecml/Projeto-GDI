@@ -4,7 +4,6 @@ CREATE TABLE tb_cargo OF tp_cargo (
     salario NOT NULL
 );
 
-
 /* Tipo_Quarto */
 CREATE TABLE tb_tipo_quarto OF tp_tipo_quarto (
     tipo PRIMARY KEY
@@ -50,7 +49,7 @@ CREATE TABLE tb_fazer_manutencao OF tp_fazer_manutencao (
 );
 
 /* Hóspede */
-CREATE TABLE tb_hospede OF tp_hospede;
+CREATE TABLE tb_hospede OF tp_hospede NESTED TABLE telefones STORE AS telefones_hospede_nt;
 
 /* Multa */
 CREATE TABLE tb_multa OF tp_multa (
@@ -68,6 +67,5 @@ CREATE TABLE tb_realiza OF tp_realiza (
     data_check_out NOT NULL,
     CONSTRAINT pk_realiza PRIMARY KEY (num_quarto_reserva, periodo_reserva, cpf_hospede, cpf_funcionario),
     CONSTRAINT fk_realiza_reserva FOREIGN KEY (num_quarto_reserva, periodo_reserva) REFERENCES tb_reserva(num_quarto, periodo),
-    CONSTRAINT fk_realiza_hospede FOREIGN KEY (cpf_hospede) REFERENCES tb_hospede(cpf_p),
     CONSTRAINT fk_realiza_funcionario FOREIGN KEY (cpf_funcionario) REFERENCES tb_funcionario(cpf)
 );
