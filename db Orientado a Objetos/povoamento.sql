@@ -122,6 +122,17 @@ INSERT INTO tb_multa VALUES (
     )
 );
 
+INSERT INTO tb_multa VALUES (
+    tp_multa(
+        NULL,
+        (SELECT REF(p) FROM tb_pagamento p WHERE p.id_pagamento = 2), 
+        (SELECT REF(q) FROM tb_quarto q WHERE q.numero_quarto = '201'),
+        '2023-10-10 a 2023-10-15',
+        'Danos ao quarto', 
+        150.00
+    )
+);
+
 -- Inserir dados na tabela tb_realiza
 INSERT INTO tb_realiza VALUES (
     tp_realiza(
