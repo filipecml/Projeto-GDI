@@ -10,4 +10,4 @@ Orientações para testar o SGBD-OR (AV5):
 
 Orientações para a avaliação da AV6:
 - O uso de 'SELECT REF' encontra-se no script povoamento.sql, na pasta do db OR;
-- O uso de 'SELECT DEREF', 'CONSULTA A VARRAY' E 'CONSULTA A NESTED TABLE' encontram-se no script consultas.sql, na pasta do db OR.
+- O uso de 'SELECT DEREF', 'CONSULTA A VARRAY' E 'CONSULTA A NESTED TABLE' encontra-se no script consultas.sql, na pasta do db OR.
